@@ -1,10 +1,16 @@
 <% if user_signed_in? %>
   <p>Welcome, <%= current_user.email %>!</p>
-  <% if @show_create_store_button %>
-    <%= link_to "Create Store", new_store_path, class: "btn btn-primary" %>
+  <% if current_user.admin? %>
+    <% if current_user.store %>
+      <%= link_to "Manage Store", admin_store_path, class: "btn btn-primary" %>
+    <% else %>
+      <%= link_to "Create Store", new_admin_store_path, class: "btn btn-primary" %>
+    <% end %>
   <% end %>
 <% else %>
   <p>Welcome to Our Marketplace!</p>
+  <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+  <%= link_to "Sign In", new_user_session_path, class: "btn btn-secondary" %>
 <% end %>
 
 <% if @products.present? %>
@@ -16,9 +22,4 @@
   </ul>
 <% else %>
   <p>There are currently no products available.</p>
-<% end %>
-
-<% unless user_signed_in? %>
-  <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
-  <%= link_to "Sign In", new_user_session_path, class: "btn btn-secondary" %>
 <% end %>

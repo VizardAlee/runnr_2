@@ -30,11 +30,15 @@ class UsersController < ApplicationController
   end
 
   def switch_role
-    @user = User.find(params[:id])
-    if @user.update(role: @user.role == 'admin' ? 'user' : 'admin')
-      redirect_to users_path, notice: 'User role updated successfully.'
+    if @user.nil?
+      redirect_to users_path, alert: 'User not found'
     else
-      redirect_to users_path, alert: 'Failed to update user role.'
+      new_role = @user.role == 'admin' ? 'user' : 'admin'
+      if @user.update(role: new_role)
+        redirect_to users_path, notice: 'User role updated successfully.'
+      else
+        redirect_to users_path, alert: 'Failed to update user role.'
+      end
     end
   end
 

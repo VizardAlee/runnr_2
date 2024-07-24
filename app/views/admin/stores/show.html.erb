@@ -1,0 +1,20 @@
+<h1>Manage Store</h1>
+<p>Name: <%= @store.name %></p>
+<p>Description: <%= @store.description %></p>
+<%= link_to 'Edit Store', edit_admin_store_path(@store), class: 'btn btn-secondary' %>
+<%= link_to 'Delete Store', admin_store_path(@store), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+<%= link_to 'Add Product', new_admin_store_product_path(@store), class: 'btn btn-primary' %>
+<%= link_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'btn btn-warning', data: { confirm: 'Are you sure you want to sign out?' } %>
+
+<h2>Products</h2>
+<% if @store.products.any? %>
+  <ul>
+    <% @store.products.each do |product| %>
+      <li>
+        <%= product.name %> - <%= link_to 'Edit', edit_admin_store_product_path(@store, product), class: 'btn btn-secondary' %> - <%= link_to 'Delete', admin_store_product_path(@store, product), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No products available.</p>
+<% end %>
