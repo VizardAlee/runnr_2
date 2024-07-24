@@ -1,0 +1,21 @@
+<% if user_signed_in? %>
+  <p>Welcome, <%= current_user.email %>!</p>
+<% else %>
+  <p>Welcome to Our Marketplace!</p>
+<% end %>
+
+<% if @products.present? %>
+  <h2>All Products</h2>
+  <ul>
+    <% @products.each do |product| %>
+      <li><%= link_to product.name, product_path(product) %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>There are currently no products available.</p>
+<% end %>
+
+<% unless user_signed_in? %>
+  <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary" %>
+  <%= link_to "Sign In", new_user_session_path, class: "btn btn-secondary" %>
+<% end %>
