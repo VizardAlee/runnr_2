@@ -1,9 +1,25 @@
 Rails.application.routes.draw do
+  get 'products/new'
+  get 'products/create'
+  get 'products/show'
+  get 'stores/new'
+  get 'stores/create'
+  get 'stores/show'
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
+
+  resources :users do
+    member do
+      patch :switch_role
+    end
+  end
+  
+  resources :stores do
+    resources :products, only: [:new, :create, :index]
+  end
+  # resources :products
   root 'home#index'
-  resources :users, only: %i[new create]
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

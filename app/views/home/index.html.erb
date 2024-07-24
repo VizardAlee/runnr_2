@@ -1,5 +1,8 @@
 <% if user_signed_in? %>
   <p>Welcome, <%= current_user.email %>!</p>
+  <% if @show_create_store_button %>
+    <%= link_to "Create Store", new_store_path, class: "btn btn-primary" %>
+  <% end %>
 <% else %>
   <p>Welcome to Our Marketplace!</p>
 <% end %>

@@ -1,0 +1,28 @@
+<h1><%= @user.username %>'s Profile</h1>
+
+<p>
+  <strong>Email:</strong>
+  <%= @user.email %>
+</p>
+
+<p>
+  <strong>Role:</strong>
+  <%= @user.role %>
+</p>
+
+<h2>Stores</h2>
+<% if @stores.present? %>
+  <ul>
+    <% @stores.each do |store| %>
+      <li>
+        <%= link_to store.name, store_path(store) %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No stores available</p>
+<% end %>
+
+<% if current_user.admin? && current_user != @user %>
+  <%= link_to 'Switch Role', switch_role_user_path(@user), method: :patch, class: 'btn btn-warning', data: { confirm: 'Are you sure you want to switch this user\'s role?' } %>
+<% end %>

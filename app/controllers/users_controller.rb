@@ -1,4 +1,21 @@
 class UsersController < ApplicationController
+
+  before_action :authenticate_user!
+  before_action :set_user, only: [:show, :switch_role]
+  before_action :authorize_admin, only: [:show, :switch_role]
+
+  def index
+    @users = User.all
+  end
+
+  def show
+    if @user.nil?
+      redirect_to users_path, alert: 'User not found'
+    else
+      @store = @user.store # Assuming a user has many stores
+    end
+  end
+
   def new
     @user = User.new
   end
@@ -12,9 +29,28 @@ class UsersController < ApplicationController
     end
   end
 
+  def switch_role
+    @user = User.find(params[:id])
+    if @user.update(role: @user.role == 'admin' ? 'user' : 'admin')
+      redirect_to users_path, notice: 'User role updated successfully.'
+    else
+      redirect_to users_path, alert: 'Failed to update user role.'
+    end
+  end
+
   private
 
   def user_params
     params.require(:user).permit(:username, :email, :password, :password_confirmation)
+  end
+
+  def authorize_admin
+    unless current_user.admin?
+      redirect_to root_path, alert: 'You are not authorized to perform this action.'
+    end
+  end
+
+  def set_user
+    @user = User.find_by(id: params[:id])
   end
 end
