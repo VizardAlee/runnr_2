@@ -1,8 +1,8 @@
 class UsersController < ApplicationController
-
   before_action :authenticate_user!
   before_action :set_user, only: [:show, :switch_role]
-  before_action :authorize_admin, only: [:show, :switch_role]
+  before_action :authorize_admin, only: [:show]
+  before_action :authorize_user_for_role_switch, only: [:switch_role]
 
   def index
     @users = User.all
@@ -31,13 +31,13 @@ class UsersController < ApplicationController
 
   def switch_role
     if @user.nil?
-      redirect_to users_path, alert: 'User not found'
+      redirect_to root_path, alert: 'User not found'
     else
       new_role = @user.role == 'admin' ? 'user' : 'admin'
       if @user.update(role: new_role)
-        redirect_to users_path, notice: 'User role updated successfully.'
+        redirect_to root_path, notice: 'User role updated successfully.'
       else
-        redirect_to users_path, alert: 'Failed to update user role.'
+        redirect_to root_path, alert: 'Failed to update user role.'
       end
     end
   end
@@ -51,6 +51,12 @@ class UsersController < ApplicationController
   def authorize_admin
     unless current_user.admin?
       redirect_to root_path, alert: 'You are not authorized to perform this action.'
+    end
+  end
+
+  def authorize_user_for_role_switch
+    unless current_user == @user
+      redirect_to root_path, alert: 'You are not authorized to switch this user\'s role.'
     end
   end
 

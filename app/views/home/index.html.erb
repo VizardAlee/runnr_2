@@ -1,11 +1,15 @@
 <% if user_signed_in? %>
   <p>Welcome, <%= current_user.email %>!</p>
+  <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-secondary" %>
+
   <% if current_user.admin? %>
     <% if current_user.store %>
       <%= link_to "Manage Store", admin_store_path, class: "btn btn-primary" %>
     <% else %>
       <%= link_to "Create Store", new_admin_store_path, class: "btn btn-primary" %>
     <% end %>
+  <% else %>
+    <%= link_to "Become an Admin", switch_role_user_path(current_user), method: :patch, class: "btn btn-warning" %>
   <% end %>
 <% else %>
   <p>Welcome to Our Marketplace!</p>
